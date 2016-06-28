@@ -18,7 +18,7 @@ class User(db.Model):
         self.username = username
         self.email = email
         self.salt = salt
-        self.hash = password
+        self.password = password
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -29,10 +29,10 @@ def register(username, email, password):
         return False
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password, salt)
-    user = User(username, email, salt, password)
+    user = User(username, email, salt, hashed_password)
     db.session.add(user)
     db.session.commit()
-    session['username'] = username
+    session['user'] = {'id': user.id, 'username': user.username}
     return True
 
 def validate_login(email, password):
@@ -42,15 +42,15 @@ def validate_login(email, password):
         return False
     if bcrypt.hashpw(password, user.salt) != user.password:
         return False
-    session['username'] = username
+    session['user'] = {'id': user.id, 'username': user.username}
     return True
 
 @app.route('/')
 def index():
-    username = None
-    if 'username' in session:
-        username = session['username']
-    return render_template('landing.html', username=username)
+    user = None
+    if 'user' in session:
+        user = session['user']
+    return render_template('landing.html', user=user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,6 +68,11 @@ def login():
                 return render_template('login.html', error='REGISTER_ERROR')
     else:
         return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run()

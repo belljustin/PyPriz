@@ -4,5 +4,102 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-    <h1> hello{% if username %}, {{ username }} {% endif %}</h1>
+    <div class="row">
+        <div class="six columns">
+            <h1> the prisoner's dilemma, </h1>
+            <p> two criminals are arrested and imprisoned.
+            Each prisoner is confined such that there is no means of communication with the other. 
+            The prosecutor has evidence to convict them of a lesser crime but does not have enough evidence to convict them of the greater crimes he believes they are guilty of. 
+            Instead he offers each a bargain with the following conditions:
+            </p>
+            <ul>
+                <li> if A and B each betray the other, each of them serves 2 years in prison </li>
+                <li> if A betrays B but B remains silent, A will be set free and B will serve 3 years in prison (and vice versa) </li>
+                <li> if A and B both remain silent, both of them will only serve 1 year in prison (on the lesser charge) </li>
+            <ul>
+        </div>
+        <div class="six columns">
+            <table class="u-full-width">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>username</th>
+                    <th>score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns"> 
+            <h2>compete</h2>
+            <p>
+                PyPriz is a place where python bots can compete to have the minimum prison sentence in an iterated game of prisoner's dilemma against other bots.
+                In iterative games, human players generally learn to cooperate and provide punishment for defective opponents. However, you are free to adopt whatever method you choose. 
+                Remember, the ultimate goal is to spend less time in prison then any of your opponents.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+    <div class="row">
+        <div class="twelve columns"> 
+            <h3>rules</h3>
+            <ol>
+                <li>If your bot encounters an unhandled error, your bots game will end immediately and you will not recieve a score</li> 
+                <li>The combined computation time of <a href="#get_update">get_update( )</a> and <a href="#play">play</a> may not exceed 5 seconds. 
+                If it does, this will be considered an error</li>
+                <li>Each match between bots will have exactly 1000 iterations</li>
+                <li>Your final score is a precentage calculated as: foo</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns"> 
+            <h2>api</h2>
+            <p>
+                The python file you provide must be a class named <code>Bot</code> that implements the methods <code>get_update</code> and <code>play</code>. That's it!
+            </p>
+
+            <h4><a class="api_link" name="get_update" href="#get_update">get_update(update)</a></h4>
+            <code>Bot.get_update : (Update -> unit) </code>
+            <p>
+                This method is used to provide your bot with the results of the previous game iteration. 
+                It will be passed an <a href="#Update">Update</a> object. 
+                It should return <code>None</code>
+            </p>
+
+            <h4><a class="api_link" name="play" href="#play">play( )</a></h4>
+            <code>Bot.play : (unit -> bool) </code>
+            <p>
+                This method is called to get your bot's move. 
+                It must return <code>True</code> or <code>False</code>.
+                <code>True</code> indicates that you wish to betray.
+                <code>False</code> indications that you wish to remain silent.
+            </p>
+
+            <h4><a class="api_link" name="Update" href="#Update">Update</a></h4>
+            <p>
+                The Update object is passed as an argument to <a href="#get_update">get_update( )</a>. 
+                It contains the following attributes:
+            <ul>
+                <li> <strong>your_move</strong> : <i>bool</i> </li>
+                <li> <strong>opponent_move</strong> : <i>bool</i> </li>
+                <li> <strong>move</strong> : <i>int</i> </li>
+            </ul>
+            </p>
+            {% if not user %}
+                <a href="#" class="button button-primary">register</a>
+                <a href="#" class="button">boilerplate bot</a>
+            {% else %}
+                <a href="#" class="button button-primary">boilerplate bot</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

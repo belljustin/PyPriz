@@ -13,30 +13,29 @@
                     <label for="password">password</label>
                     <input type="password" id="password" name="password"  class="u-full-width"/>
 
-                    <button type="submit" id="login" name="login" class="u-pull-right button-primary">login</input>
+                    <button type="submit" id="login" name="login" class="u-pull-right button-primary">login</button>
 
                     {% if error == "LOGIN_ERROR" %}
-                        <span class="u-cf warning">The email or password you provided was incorrect</span>
+                        <span class="u-cf u-full-width warning">The email or password you provided was incorrect</span>
                     {% endif %}
             </form>
         </div>
 
         <div class="six columns">
             <form action={{ url_for('login') }} method="post">
-                    <label for="email">email</label>
-                    <input type="text" id="email" name="email" maxlength="120" class="u-full-width"/>
+                <label for="email">email</label>
+                <input type="text" id="email" name="email" maxlength="120" class="u-full-width"/>
 
-                    <label for="password">password</label>
-                    <input type="password" id="password" name="password"  class="u-full-width"/>
+                <label for="password">password</label>
+                <input type="password" id="password" name="password"  class="u-full-width"/>
 
-                    <label for="username">username</label>
-                    <input type="text" id="username" name="username" maxlength="80" class="u-full-width"/>
+                <label for="username">username</label>
+                <input type="text" id="username" name="username" maxlength="80" class="u-full-width"/>
 
-
-                    <button type="submit" id="register" name="register" class="u-pull-right">register</button>
-                    {% if error == "REGISTER_ERROR" %}
-                        <span class="u-cf warning">The email or username you provided is already taken</span>
-                    {% endif %}
+                <button type="submit" id="register" name="register" class="u-pull-right">register</button>
+                {% if error == "REGISTER_ERROR" %}
+                    <span class="u-cf warning">The email or username you provided is already taken</span>
+                {% endif %}
             </form>
         </div>
     </div>

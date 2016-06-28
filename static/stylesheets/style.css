@@ -1,10 +1,32 @@
-.logo {
+p {
+    margin-left: 1rem;
+    text-indent: 3rem;
+    text-align: justify;
+}
+
+ul.navigation li a{
     text-decoration: none;
+    padding: 1rem;
+}
+
+ul.navigation li {
+    display: inline;
+}
+
+ul.navigation {
+    list-style-type: none;
+    background-color: #EEE;
+    padding: 1rem;
 }
 
 .warning {
+    text-align: center;
     margin: 10px 0px;
     padding:12px;
     color: #9F6000;
     background-color: #FEEFB3;
+}
+
+.api_link {
+    text-decoration: none;
 }
