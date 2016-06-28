@@ -96,7 +96,7 @@
             </p>
             {% if not user %}
                 <a href="#" class="button button-primary">register</a>
-                <a href="#" class="button">boilerplate bot</a>
+                <a href="{{ url_for('static', filename='assets/boilerbot.py') }}" class="button" download>boilerplate bot</a>
             {% else %}
                 <a href="#" class="button button-primary">boilerplate bot</a>
             {% endif %}
