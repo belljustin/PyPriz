@@ -9,7 +9,7 @@
     <tbody>
     {% for u in users %}
         <tr>
-            <th>1</th>
+            <th>{{ loop.index }}</th>
             <td>{{ u.username }}</td>
             <td>{{ u.score }}</td>
         </tr>
