@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 import bcrypt
+import os
 
 app = Flask(__name__)
 app.config.from_envvar('FLASK_SETTINGS')
@@ -76,6 +77,15 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if not 'user' in session:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        f = request.files['botfile']
+        f.save(os.path.join(os.getcwd(), "bots", str(session['user']['id']) + '.py'))
+        return render_template('upload.html')
 
 if __name__ == '__main__':
     app.run()
