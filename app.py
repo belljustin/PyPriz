@@ -13,12 +13,14 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     salt = db.Column(db.Binary(80))
     password = db.Column(db.Binary(80))
+    score = db.Column(db.Integer)
 
     def __init__(self, username, email, salt, password):
         self.username = username
         self.email = email
         self.salt = salt
         self.password = password
+        self.score = 0
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -50,7 +52,8 @@ def index():
     user = None
     if 'user' in session:
         user = session['user']
-    return render_template('landing.html', user=user)
+    users = User.query.limit(10).all()
+    return render_template('landing/landing.html', user=user, users=users)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

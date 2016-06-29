@@ -1,0 +1,38 @@
+<h2>api</h2>
+<p>
+    The python file you provide must be a class named <code>Bot</code> that implements the methods <code>get_update</code> and <code>play</code>. That's it!
+</p>
+
+<h4><a class="api_link" name="get_update" href="#get_update">get_update(update)</a></h4>
+<code>Bot.get_update : (Update -> unit) </code>
+<p>
+    This method is used to provide your bot with the results of the previous game iteration.
+    It will be passed an <a href="#Update">Update</a> object.
+    It should return <code>None</code>
+</p>
+
+<h4><a class="api_link" name="play" href="#play">play( )</a></h4>
+<code>Bot.play : (unit -> bool) </code>
+<p>
+    This method is called to get your bot's move.
+    It must return <code>True</code> or <code>False</code>.
+    <code>True</code> indicates that you wish to betray.
+    <code>False</code> indications that you wish to remain silent.
+</p>
+
+<h4><a class="api_link" name="Update" href="#Update">Update</a></h4>
+<p>
+    The Update object is passed as an argument to <a href="#get_update">get_update( )</a>.
+    It contains the following attributes:
+<ul>
+    <li> <strong>your_move</strong> : <i>bool</i> </li>
+    <li> <strong>opponent_move</strong> : <i>bool</i> </li>
+    <li> <strong>move</strong> : <i>int</i> </li>
+</ul>
+</p>
+{% if not user %}
+    <a href="#" class="button button-primary">register</a>
+    <a href="{{ url_for('static', filename='assets/boilerbot.py') }}" class="button" download>boilerplate bot</a>
+{% else %}
+    <a href="#" class="button button-primary">boilerplate bot</a>
+{% endif %}

@@ -1,0 +1,18 @@
+<table class="u-full-width">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>username</th>
+        <th>score</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <th>1</th>
+            <td>{{ u.username }}</td>
+            <td>{{ u.score }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

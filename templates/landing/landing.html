@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="six columns">
+            <h1> the prisoner's dilemma, </h1>
+            <p> two criminals are arrested and imprisoned.
+            Each prisoner is confined such that there is no means of communication with the other.
+            The prosecutor has evidence to convict them of a lesser crime but does not have enough evidence to convict them of the greater crimes he believes they are guilty of.
+            Instead he offers each a bargain with the following conditions:
+            </p>
+            <ul>
+                <li> if A and B each betray the other, each of them serves 2 years in prison </li>
+                <li> if A betrays B but B remains silent, A will be set free and B will serve 3 years in prison (and vice versa) </li>
+                <li> if A and B both remain silent, both of them will only serve 1 year in prison (on the lesser charge) </li>
+            <ul>
+        </div>
+        <div class="six columns">
+            {% include "landing/upload.html" %}
+
+            {% include "landing/scoreboard.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <h2>compete</h2>
+            <p>
+                PyPriz is a place where python bots can compete to have the minimum prison sentence in an iterated game of prisoner's dilemma against other bots.
+                In iterative games, human players generally learn to cooperate and provide punishment for defective opponents. However, you are free to adopt whatever method you choose.
+                Remember, the ultimate goal is to spend less time in prison then any of your opponents.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+    <div class="row">
+        <div class="twelve columns">
+            <h3>rules</h3>
+            <ol>
+                <li>If your bot encounters an unhandled error, your bots game will end immediately and you will not recieve a score</li>
+                <li>The combined computation time of <a href="#get_update">get_update( )</a> and <a href="#play">play</a> may not exceed 5 seconds.
+                If it does, this will be considered an error</li>
+                <li>Each match between bots will have exactly 1000 iterations</li>
+                <li>Your final score is a precentage calculated as: foo</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            {% include "landing/api.html" %}
+        </div>
+    </div>
+{% endblock %}
