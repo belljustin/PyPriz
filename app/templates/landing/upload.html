@@ -1,7 +1,7 @@
 {% block upload %}
-    <form enctype="multipart/form-data" action="/upload" method="POST">
+    <form enctype="multipart/form-data" action="{{ url_for('upload') }}" method="POST">
         <h2>python bot</h2>
-        <input type="file" name="botfile" accept=".py" /> 
+        <input type="file" name="botfile" accept=".py" />
         <input class="button button-primary" type="submit" value="upload" />
     </form>
 {% endblock %}

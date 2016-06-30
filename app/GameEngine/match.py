@@ -4,6 +4,9 @@ from signal import signal, SIGXCPU, SIGSEGV
 from multiprocessing import Process, Queue
 from ctypes import c_bool
 
+MAX_RUNTIME = 5
+MAX_MEMSIZE = 100*10**6
+
 class Update:
     def __init__(self):
         self.your_move = None
@@ -29,10 +32,10 @@ class PlayProcess(Process):
         try:
             signal(SIGXCPU, time_expired)
             soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-            resource.setrlimit(resource.RLIMIT_CPU, (5, hard))
+            resource.setrlimit(resource.RLIMIT_CPU, (MAX_RUNTIME, hard))
 
             soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-            resource.setrlimit(resource.RLIMIT_AS, (500*10**6, hard))
+            resource.setrlimit(resource.RLIMIT_AS, (MAX_MEMSIZE, hard))
 
             self.bot.get_update(self.update)
             self.responseQueue.put((os.getpid(), self.bot.play()))
@@ -75,9 +78,9 @@ def play_match(bot_a, bot_b, iterations):
                 response_b = response[1]
 
         if type(response_a) != bool:
-            return (Exception, score[1])
+            return (response_a, score[1])
         elif type(response_b) != bool:
-            return (score[0], Exception)
+            return (score[0], response_b)
 
         points = get_points(response_a, response_b)
         score = (score[0] + points[0], score[1] + points[1])

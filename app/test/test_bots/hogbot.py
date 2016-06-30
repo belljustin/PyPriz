@@ -1,6 +1,6 @@
 '''
-    BoilerPlate Bot
-    a.k.a. Blabby Bot
+    Hogbot
+    uses too much memory
 '''
 
 class Bot:
@@ -10,12 +10,10 @@ class Bot:
     def __init__(self):
         pass
 
-    # define your bot's playing strategy here 
+    # define your bot's playing strategy here
     # True = betray, False = keep quiet
     def play(self):
-        for i in range(200000):
-            for j in range(200000):
-                v = i * j
+        a = ['a']*100*10**6
         return False
 
     # use data from the previous round to update your strategy

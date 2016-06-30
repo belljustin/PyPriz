@@ -1,5 +1,5 @@
 *.pyc
 *.swp
 .env
-dev_config.py
 .vagrant
+app/settings.py

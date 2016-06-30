@@ -10,7 +10,7 @@ class Bot:
     def __init__(self):
         pass
 
-    # define your bot's playing strategy here 
+    # define your bot's playing strategy here
     # True = betray, False = keep quiet
     def play(self):
         return True
