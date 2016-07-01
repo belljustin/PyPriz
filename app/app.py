@@ -9,16 +9,19 @@ from model.user import User
 
 from controller import index, login, logout, upload
 
-app = Flask(__name__)
-app.config.from_object('settings')
-app.config.from_envvar('FLASK_SETTINGS')
-db.init_app(app)
+def create_app(config_filename):
+    app = Flask(__name__)
 
-app.add_url_rule('/', 'index', index)
-app.add_url_rule('/login', 'login', login, methods=['GET', 'POST'])
-app.add_url_rule('/logout', 'logout', logout)
-app.add_url_rule('/upload', 'upload', upload, methods=['POST'])
+    app.config.from_pyfile(config_filename)
+    db.init_app(app)
+
+    app.add_url_rule('/', 'index', index)
+    app.add_url_rule('/login', 'login', login, methods=['GET', 'POST'])
+    app.add_url_rule('/logout', 'logout', logout)
+    app.add_url_rule('/upload', 'upload', upload, methods=['POST'])
+
+    return app
 
 if __name__ == '__main__':
-    app.debug = True
+    app = create_app('settings.py')
     app.run()
