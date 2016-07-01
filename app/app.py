@@ -7,7 +7,7 @@ from flask import Flask, session
 from model import db
 from model.user import User
 
-from controller import index, login, logout, upload
+from views import index, auth, upload
 
 def create_app(config_filename):
     app = Flask(__name__)
@@ -15,10 +15,15 @@ def create_app(config_filename):
     app.config.from_pyfile(config_filename)
     db.init_app(app)
 
-    app.add_url_rule('/', 'index', index)
-    app.add_url_rule('/login', 'login', login, methods=['GET', 'POST'])
-    app.add_url_rule('/logout', 'logout', logout)
-    app.add_url_rule('/upload', 'upload', upload, methods=['POST'])
+    app.add_url_rule('/', view_func=index.IndexView.as_view('index'))
+
+    login_view = auth.LoginView.as_view('login')
+    app.add_url_rule('/login', view_func=login_view, methods=['GET', 'POST'])
+    logout_view = auth.LogoutView.as_view('logout')
+    app.add_url_rule('/logout', view_func=logout_view)
+
+    upload_view = upload.UploadView.as_view('upload', app.config['BOT_FOLDER'])
+    app.add_url_rule('/upload', view_func=upload_view, methods=['POST'])
 
     return app
 
