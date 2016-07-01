@@ -3,8 +3,6 @@ import os
 from flask import render_template, request, redirect, session, url_for
 from flask.views import View
 
-from settings import BOT_FOLDER
-
 class UploadView(View):
     def __init__(self, upload_folder):
         self.upload_folder = upload_folder
