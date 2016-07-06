@@ -42,10 +42,20 @@ class TestApp(TestCase):
         self.assertEqual(response.status_code, 200)
         with self.app.app_context():
             self.assertIsNotNone(User.query.all())
+        with self.client.session_transaction() as sess:
+            self.assertTrue('user' in sess)
+
+    def test_logout(self):
+        self.register('foo@gmail.com', 'password', 'bar')
+        response = self.client.get('/logout')
+        self.assertEqual(response.status_code, 302)
+        with self.client.session_transaction() as sess:
+            self.assertFalse('user' in sess)
 
     def test_login(self):
         email, password = 'foo@gmail.com', 'password'
         self.register(email, password, 'foobar')
+        self.client.get('/logout')
         response = self.login(email, password)
         self.assertEqual(response.status_code, 200)
         with self.client.session_transaction() as sess:
