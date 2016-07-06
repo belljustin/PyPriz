@@ -1,6 +1,6 @@
 import bcrypt
 
-from flask import render_template, request, redirect, session, url_for
+from flask import render_template, request, redirect, session, url_for, flash
 from flask.views import View
 
 from pypriz.model import db
@@ -9,14 +9,9 @@ from pypriz.model.user import User
 class LoginView(View):
     def dispatch_request(self):
         if request.method == 'POST':
-            if 'login' in request.form:
-                return self.login(request.form['email'], request.form['password'])
-            elif 'register' in request.form:
-                return self.register(
-                    request.form['username'],
-                    request.form['email'],
-                    request.form['password'])
-        return render_template('login.html')
+            return self.login(request.form['email'], request.form['password'])
+        error = session.pop('error', None)
+        return render_template('login.html', error=error)
 
     def login(self, email, password):
         if self.validate_login(email, password):
@@ -33,10 +28,19 @@ class LoginView(View):
         session['user'] = {'id': user.id, 'username': user.username}
         return True
 
+
+class RegisterView(View):
+    def dispatch_request(self):
+        return self.register(
+            request.form['username'],
+            request.form['email'],
+            request.form['password'])
+
     def register(self, username, email, password):
         if self.validate_registration(username, email, password):
             return redirect(url_for('index'))
-        return render_template('login.html', error='REGISTER_ERROR')
+        session['error'] = 'REGISTRATION_ERROR'
+        return redirect(url_for('login'))
 
     def validate_registration(self, username, email, password):
         password = bytes(password, 'utf-8')
@@ -45,6 +49,7 @@ class LoginView(View):
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password, salt)
         user = User(username, email, salt, hashed_password)
+        print(user.password)
         db.session.add(user)
         db.session.commit()
         session['user'] = {'id': user.id, 'username': user.username}

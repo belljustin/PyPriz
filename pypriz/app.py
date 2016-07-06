@@ -16,13 +16,22 @@ def create_app(config_filename):
 
     app.add_url_rule('/', view_func=index.IndexView.as_view('index'))
 
-    login_view = auth.LoginView.as_view('login')
-    app.add_url_rule('/login', view_func=login_view, methods=['GET', 'POST'])
-    logout_view = auth.LogoutView.as_view('logout')
-    app.add_url_rule('/logout', view_func=logout_view)
+    app.add_url_rule(
+        '/login',
+        view_func=auth.LoginView.as_view('login'),
+        methods=['GET', 'POST'])
+    app.add_url_rule(
+        '/register',
+        view_func=auth.RegisterView.as_view('register'),
+        methods=['POST'])
+    app.add_url_rule(
+        '/logout',
+        view_func=auth.LogoutView.as_view('logout'))
 
-    upload_view = upload.UploadView.as_view('upload', app.config['BOT_FOLDER'])
-    app.add_url_rule('/upload', view_func=upload_view, methods=['POST'])
+    app.add_url_rule(
+        '/upload',
+        view_func=upload.UploadView.as_view('upload', app.config['BOT_FOLDER']),
+        methods=['POST'])
 
     return app
 
