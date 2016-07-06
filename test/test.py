@@ -1,8 +1,17 @@
+from flask import url_for
 from unittest import TestCase
+from functools import wraps
 
 from pypriz.app import create_app
 from pypriz.model import db
 from pypriz.model.user import User
+
+def context_wrapper(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        with args[0].app.app_context():
+            return f(*args, **kwargs)
+    return wrapper
 
 class TestApp(TestCase):
 
@@ -20,12 +29,13 @@ class TestApp(TestCase):
         with self.app.app_context():
             db.drop_all()
 
+
     def register(self, email, password, username):
         data = dict(
             email=email,
             password=password,
             username=username)
-        return self.client.post('/register', data=data, follow_redirects=True)
+        return self.client.post(url_for('register'), data=data, follow_redirects=True)
 
     def login(self, email, password):
         data = dict(
@@ -33,18 +43,20 @@ class TestApp(TestCase):
             password=password)
         return self.client.post('/login', data=data, follow_redirects=True)
 
+    @context_wrapper
     def test_index(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
+    @context_wrapper
     def test_register(self):
         response = self.register('foo@gmail.com', 'password', 'bar')
         self.assertEqual(response.status_code, 200)
-        with self.app.app_context():
-            self.assertIsNotNone(User.query.all())
+        self.assertIsNotNone(User.query.all())
         with self.client.session_transaction() as sess:
             self.assertTrue('user' in sess)
 
+    @context_wrapper
     def test_logout(self):
         self.register('foo@gmail.com', 'password', 'bar')
         response = self.client.get('/logout')
@@ -52,6 +64,7 @@ class TestApp(TestCase):
         with self.client.session_transaction() as sess:
             self.assertFalse('user' in sess)
 
+    @context_wrapper
     def test_login(self):
         email, password = 'foo@gmail.com', 'password'
         self.register(email, password, 'foobar')
