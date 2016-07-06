@@ -6,11 +6,21 @@ from pypriz.model import db
 class TestApp(TestCase):
 
     def setUp(self):
-        app = create_app('settings')
-        db.init_app(app)
-        db.create_all()
+        self.app = create_app('test.settings')
+
+        self.client = self.app.test_client()
+
+        db.init_app(self.app)
+        with self.app.app_context():
+            db.create_all()
+
 
     def tearDown(self):
         db.session.remove()
-        db.drop_all()
+        with self.app.app_context():
+            db.drop_all()
+
+    def test_index(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
 
