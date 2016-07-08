@@ -4,8 +4,8 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, session
 
-from pypriz.model import db
-from pypriz.model.user import User
+from pypriz.models import db
+from pypriz.models.user import User
 
 from pypriz.views import index, auth, upload
 

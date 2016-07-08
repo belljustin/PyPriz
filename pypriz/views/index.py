@@ -1,7 +1,7 @@
 from flask import render_template, session
 from flask.views import View
 
-from pypriz.model.user import User
+from pypriz.models.user import User
 
 
 class IndexView(View):

@@ -3,8 +3,8 @@ import bcrypt
 from flask import render_template, request, redirect, session, url_for, flash
 from flask.views import View
 
-from pypriz.model import db
-from pypriz.model.user import User
+from pypriz.models import db
+from pypriz.models.user import User
 
 class LoginView(View):
     def dispatch_request(self):
