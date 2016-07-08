@@ -1,10 +1,16 @@
+import os
 from flask import url_for
 from unittest import TestCase
 from functools import wraps
+from tempfile import TemporaryFile
 
 from pypriz.app import create_app
 from pypriz.model import db
 from pypriz.model.user import User
+
+EMAIL = 'foo@gmail.com'
+PASSWORD = 'password'
+USERNAME = 'foobar'
 
 def context_wrapper(f):
     @wraps(f)
@@ -50,7 +56,7 @@ class TestApp(TestCase):
 
     @context_wrapper
     def test_register(self):
-        response = self.register('foo@gmail.com', 'password', 'bar')
+        response = self.register(EMAIL, PASSWORD, USERNAME)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(User.query.all())
         with self.client.session_transaction() as sess:
@@ -58,7 +64,7 @@ class TestApp(TestCase):
 
     @context_wrapper
     def test_logout(self):
-        self.register('foo@gmail.com', 'password', 'bar')
+        self.register(EMAIL, PASSWORD, USERNAME)
         response = self.client.get(url_for('logout'))
         self.assertEqual(response.status_code, 302)
         with self.client.session_transaction() as sess:
@@ -66,13 +72,25 @@ class TestApp(TestCase):
 
     @context_wrapper
     def test_login(self):
-        email, password = 'foo@gmail.com', 'password'
-        self.register(email, password, 'foobar')
+        self.register(EMAIL, PASSWORD, USERNAME)
         self.client.get(url_for('logout'))
-        response = self.login(email, password)
+        response = self.login(EMAIL, PASSWORD)
         self.assertEqual(response.status_code, 200)
         with self.client.session_transaction() as sess:
             self.assertTrue('user' in sess)
 
-    #TODO: test upload
+    @context_wrapper
+    def test_upload(self):
+        response = self.client.post(url_for('upload'))
+        self.assertEqual(response.status_code, 302)
+
+        self.register(EMAIL, PASSWORD, USERNAME)
+        self.login(EMAIL, PASSWORD)
+        tf = TemporaryFile()
+        data = {'botfile': (tf, "test.txt"),
+                'context_type': 'multipart/form-data'}
+        response = self.client.post(url_for('upload'), data=data)
+        self.assertEqual(response.status_code, 200)
+        botfile = os.path.join(self.app.config['BOT_FOLDER'], '1.py')
+        self.assertTrue(os.path.isfile(botfile))
 
