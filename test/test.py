@@ -41,11 +41,11 @@ class TestApp(TestCase):
         data = dict(
             email=email,
             password=password)
-        return self.client.post('/login', data=data, follow_redirects=True)
+        return self.client.post(url_for('login'), data=data, follow_redirects=True)
 
     @context_wrapper
     def test_index(self):
-        response = self.client.get('/')
+        response = self.client.get(url_for('index'))
         self.assertEqual(response.status_code, 200)
 
     @context_wrapper
@@ -59,7 +59,7 @@ class TestApp(TestCase):
     @context_wrapper
     def test_logout(self):
         self.register('foo@gmail.com', 'password', 'bar')
-        response = self.client.get('/logout')
+        response = self.client.get(url_for('logout'))
         self.assertEqual(response.status_code, 302)
         with self.client.session_transaction() as sess:
             self.assertFalse('user' in sess)
@@ -68,9 +68,11 @@ class TestApp(TestCase):
     def test_login(self):
         email, password = 'foo@gmail.com', 'password'
         self.register(email, password, 'foobar')
-        self.client.get('/logout')
+        self.client.get(url_for('logout'))
         response = self.login(email, password)
         self.assertEqual(response.status_code, 200)
         with self.client.session_transaction() as sess:
             self.assertTrue('user' in sess)
+
+    #TODO: test upload
 
