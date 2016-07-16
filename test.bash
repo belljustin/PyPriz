@@ -1,5 +1,5 @@
 if [[ $* == *-c* ]]; then
-    flags="--with-coverage --cover-html --cover-package=pypriz"
+    flags="--with-coverage --cover-html --cover-erase --cover-package=pypriz"
 fi
 
 if [[ $1 == "GameEngine" ]]; then

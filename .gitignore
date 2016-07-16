@@ -3,6 +3,6 @@
 *.DS_Store
 .env
 .vagrant
-app/settings.py
+pypriz/settings.py
 cover/
 .coverage
