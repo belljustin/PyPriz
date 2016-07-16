@@ -4,7 +4,9 @@ Flask based site that allows programmers to upload python bots to compete in [pr
 ## Build Status
 [master build]: https://travis-ci.org/belljustin/PyPriz.svg?branch=master
 [travis url]: https://travis-ci.org/belljustin/PyPriz/branches
+[master coverage]: https://coveralls.io/repos/github/belljustin/PyPriz/badge.svg?branch=master
+[coveralls url]: https://coveralls.io/github/belljustin/PyPriz
 
-| Branch | Status |
-|:--------:|:----------------------------------------------:|
-| `master` | [![travis/master][master build]]([travis url]) |
+| Branch   | Status                          | Coverage                             |
+|:--------:|:-------------------------------:|:------------------------------------:|
+| `master` | [![][master build]][travis url] | [![][master coverage]][coveralls url] |
