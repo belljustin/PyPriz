@@ -3,6 +3,7 @@
     uses too much memory
 '''
 
+
 class Bot:
     name = "Blabby Bot"
 
@@ -11,9 +12,8 @@ class Bot:
         pass
 
     def play(self, update):
-        a = ['a']*100*10**6
+        a = ['a']*1000*10**6
         return False
-
 
     def __repr__(self):
         return name

@@ -1,11 +1,11 @@
 import resource
 import os
-from signal import signal, SIGXCPU, SIGSEGV
+from signal import signal, SIGXCPU
 from multiprocessing import Process, Queue
-from ctypes import c_bool
 
 MAX_RUNTIME = 5
 MAX_MEMSIZE = 100*10**6
+
 
 class Update:
     def __init__(self):
@@ -18,8 +18,10 @@ class Update:
         self.opponent_move = opponent_move
         self.move = move
 
+
 def time_expired(n, stack):
     raise Exception()
+
 
 class PlayProcess(Process):
     def __init__(self, bot, update, responseQueue):
@@ -41,6 +43,7 @@ class PlayProcess(Process):
         except Exception as e:
             print(e, type(e))
             self.responseQueue.put((os.getpid(), e))
+            raise e
         finally:
             return
 
@@ -53,6 +56,7 @@ def get_points(responseA, responseB):
     elif not responseA and responseB:
         return (3, 1)
     return (2, 2)
+
 
 def play_match(bot_a, bot_b, iterations):
     score = (0, 0)
