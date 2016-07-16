@@ -1,7 +1,6 @@
 import os
 from flask import url_for
 from flask_testing import TestCase
-# from unittest import TestCase
 from functools import wraps
 from tempfile import TemporaryFile
 
