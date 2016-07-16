@@ -10,14 +10,8 @@ class Bot:
     def __init__(self):
         pass
 
-    # define your bot's playing strategy here
-    # True = betray, False = keep quiet
-    def play(self):
+    def play(self, update):
         return True
-
-    # use data from the previous round to update your strategy
-    def get_update(self, update):
-        pass
 
     def __repr__(self):
         return name

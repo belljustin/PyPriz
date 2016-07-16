@@ -11,7 +11,7 @@ class Update:
     def __init__(self):
         self.your_move = None
         self.opponent_move = None
-        self.move = 0
+        self.moves = 0
 
     def update(self, your_move, opponent_move, move):
         self.your_move = your_move
@@ -37,8 +37,7 @@ class PlayProcess(Process):
             soft, hard = resource.getrlimit(resource.RLIMIT_AS)
             resource.setrlimit(resource.RLIMIT_AS, (MAX_MEMSIZE, hard))
 
-            self.bot.get_update(self.update)
-            self.responseQueue.put((os.getpid(), self.bot.play()))
+            self.responseQueue.put((os.getpid(), self.bot.play(self.update)))
         except Exception as e:
             print(e, type(e))
             self.responseQueue.put((os.getpid(), e))
