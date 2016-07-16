@@ -6,17 +6,6 @@ from test.bots.slowbot import Bot as SlowBot
 from test.bots.boilerbot import Bot as BoilerBot
 from pypriz.GameEngine.match import play_match
 
-def main():
-    if platform != 'linux' and platform != 'linux2':
-        return
-
-    botA = BotA()
-    botB = BotB()
-
-    print(play_match(botA, botB, 1))
-
-if __name__ == "__main__":
-    main()
 
 class TestMatch(TestCase):
     @classmethod
@@ -28,4 +17,11 @@ class TestMatch(TestCase):
         slowbot = SlowBot()
 
         with self.assertRaises(Exception):
-            play_match(botA, botB, 1)
+            play_match(bot, slowbot, 1)
+
+    def test_memory_limt(self):
+        bot = BoilerBot()
+        hogbot = HogBot()
+
+        with self.assertRaises(Exception):
+            play_match(bot, hogbot, 1)
