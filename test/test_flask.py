@@ -6,7 +6,9 @@ from tempfile import TemporaryFile
 
 from pypriz.app import create_app
 from pypriz.models import db
+from pypriz.models.token import Token
 from pypriz.models.user import User
+from pypriz.helpers import api_auth
 
 EMAIL = 'foo@gmail.com'
 PASSWORD = 'password'
@@ -94,3 +96,7 @@ class TestApp(TestCase):
         botfile = os.path.join(self.app.config['BOT_FOLDER'], '1.py')
         self.assertTrue(os.path.isfile(botfile))
 
+    @context_wrapper
+    def test_token_generator(self):
+        token = api_auth.generate_token('127.0.0.1')
+        self.assertIsNotNone(token)

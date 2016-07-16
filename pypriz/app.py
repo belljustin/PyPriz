@@ -34,8 +34,3 @@ def create_app(config_filename):
         methods=['POST'])
 
     return app
-
-if __name__ == '__main__':
-    app = create_app('pypriz.settings')
-    db.init_app(app)
-    app.run()
