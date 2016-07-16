@@ -16,7 +16,7 @@
                     <button type="submit" id="login" name="login" class="u-pull-right button-primary">login</button>
 
                     {% if error == "LOGIN_ERROR" %}
-                        <span class="u-cf u-full-width warning">The email or password you provided was incorrect</span>
+                        <span data-error='LOGIN_ERROR' class="u-cf u-full-width warning">The email or password you provided was incorrect</span>
                     {% endif %}
             </form>
         </div>
@@ -33,8 +33,8 @@
                 <input type="text" id="username" name="username" maxlength="80" class="u-full-width"/>
 
                 <button type="submit" id="register" name="register" class="u-pull-right">register</button>
-                {% if error == "REGISTER_ERROR" %}
-                    <span class="u-cf warning">The email or username you provided is already taken</span>
+                {% if error == "REGISTRATION_ERROR" %}
+                    <span data-error="REGISTRATION_ERROR" class="u-cf warning">The email or username you provided is already taken</span>
                 {% endif %}
             </form>
         </div>

@@ -1,6 +1,7 @@
 import os
 from flask import url_for
-from unittest import TestCase
+from flask_testing import TestCase
+# from unittest import TestCase
 from functools import wraps
 from tempfile import TemporaryFile
 
@@ -14,6 +15,7 @@ PASSWORD = 'password'
 USERNAME = 'foobar'
 
 
+# Used to give access to the models
 def context_wrapper(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -23,6 +25,9 @@ def context_wrapper(f):
 
 
 class FlaskTestCase(TestCase):
+
+    def create_app(self):
+        return create_app('test.settings')
 
     def setUp(self):
         self.app = create_app('test.settings')
@@ -69,6 +74,16 @@ class TestAuth(FlaskTestCase):
             self.assertTrue('user' in sess)
 
     @context_wrapper
+    def test_register_duplicate_username(self):
+        self.register(EMAIL, PASSWORD, USERNAME)
+        self.client.get(url_for('logout'))
+        response = self.register(EMAIL, PASSWORD, USERNAME)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(User.query.all()) == 1)
+        self.assertTrue(b'REGISTRATION_ERROR' in response.data)
+        with self.client.session_transaction() as sess:
+            self.assertFalse('user' in sess)
+
     def test_logout(self):
         self.register(EMAIL, PASSWORD, USERNAME)
         response = self.client.get(url_for('logout'))
@@ -76,7 +91,6 @@ class TestAuth(FlaskTestCase):
         with self.client.session_transaction() as sess:
             self.assertFalse('user' in sess)
 
-    @context_wrapper
     def test_login(self):
         self.register(EMAIL, PASSWORD, USERNAME)
         self.client.get(url_for('logout'))
@@ -85,15 +99,29 @@ class TestAuth(FlaskTestCase):
         with self.client.session_transaction() as sess:
             self.assertTrue('user' in sess)
 
+    def test_login_invalid_user(self):
+        response = self.login(EMAIL, PASSWORD)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'LOGIN_ERROR' in response.data)
+        with self.client.session_transaction() as sess:
+            self.assertFalse('user' in sess)
+
+    def test_login_invalid_password(self):
+        self.register(EMAIL, PASSWORD, USERNAME)
+        self.client.get(url_for('logout'))
+        response = self.login(EMAIL, '')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'LOGIN_ERROR' in response.data)
+        with self.client.session_transaction() as sess:
+            self.assertFalse('user' in sess)
+
 
 class TestApp(FlaskTestCase):
 
-    @context_wrapper
     def test_index(self):
         response = self.client.get(url_for('index'))
         self.assertEqual(response.status_code, 200)
 
-    @context_wrapper
     def test_upload(self):
         response = self.client.post(url_for('upload'))
         self.assertEqual(response.status_code, 302)
@@ -108,8 +136,6 @@ class TestApp(FlaskTestCase):
         botfile = os.path.join(self.app.config['BOT_FOLDER'], '1.py')
         self.assertTrue(os.path.isfile(botfile))
 
-    @context_wrapper
     def test_token_generator(self):
         token = api_auth.generate_token('127.0.0.1')
         self.assertIsNotNone(token)
-
