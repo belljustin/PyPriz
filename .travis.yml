@@ -3,6 +3,9 @@ python:
     - 3.5
 install:
     - pip install -r requirements.txt
-script: ./test.bash
+    - pip install coveralls
+script: ./test.bash -c
 os:
     - linux
+after_success:
+    - coveralls 
