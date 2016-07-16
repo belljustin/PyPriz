@@ -6,13 +6,13 @@ from tempfile import TemporaryFile
 
 from pypriz.app import create_app
 from pypriz.models import db
-from pypriz.models.token import Token
 from pypriz.models.user import User
 from pypriz.helpers import api_auth
 
 EMAIL = 'foo@gmail.com'
 PASSWORD = 'password'
 USERNAME = 'foobar'
+
 
 def context_wrapper(f):
     @wraps(f)
@@ -21,7 +21,8 @@ def context_wrapper(f):
             return f(*args, **kwargs)
     return wrapper
 
-class TestApp(TestCase):
+
+class FlaskTestCase(TestCase):
 
     def setUp(self):
         self.app = create_app('test.settings')
@@ -37,24 +38,27 @@ class TestApp(TestCase):
         with self.app.app_context():
             db.drop_all()
 
-
     def register(self, email, password, username):
         data = dict(
             email=email,
             password=password,
             username=username)
-        return self.client.post(url_for('register'), data=data, follow_redirects=True)
+        return self.client.post(
+            url_for('register'),
+            data=data,
+            follow_redirects=True)
 
     def login(self, email, password):
         data = dict(
             email=email,
             password=password)
-        return self.client.post(url_for('login'), data=data, follow_redirects=True)
+        return self.client.post(
+            url_for('login'),
+            data=data,
+            follow_redirects=True)
 
-    @context_wrapper
-    def test_index(self):
-        response = self.client.get(url_for('index'))
-        self.assertEqual(response.status_code, 200)
+
+class TestAuth(FlaskTestCase):
 
     @context_wrapper
     def test_register(self):
@@ -81,6 +85,14 @@ class TestApp(TestCase):
         with self.client.session_transaction() as sess:
             self.assertTrue('user' in sess)
 
+
+class TestApp(FlaskTestCase):
+
+    @context_wrapper
+    def test_index(self):
+        response = self.client.get(url_for('index'))
+        self.assertEqual(response.status_code, 200)
+
     @context_wrapper
     def test_upload(self):
         response = self.client.post(url_for('upload'))
@@ -100,3 +112,4 @@ class TestApp(TestCase):
     def test_token_generator(self):
         token = api_auth.generate_token('127.0.0.1')
         self.assertIsNotNone(token)
+
