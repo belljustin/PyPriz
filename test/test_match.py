@@ -25,3 +25,9 @@ class TestMatch(TestCase):
 
         with self.assertRaises(Exception):
             play_match(bot, hogbot, 1)
+
+    def test_succesful_match(self):
+        botA = BoilerBot()
+        botB = BoilerBot()
+
+        play_match(botA, botB, 1)
