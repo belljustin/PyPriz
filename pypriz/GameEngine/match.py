@@ -80,10 +80,8 @@ def play_match(bot_a, bot_b, iterations):
             else:
                 response_b = response[1]
 
-        if type(response_a) != bool:
-            return (response_a, score[1])
-        elif type(response_b) != bool:
-            return (score[0], response_b)
+        if type(response_a) != bool or type(response_b) != bool:
+            raise Exception 
 
         points = get_points(response_a, response_b)
         score = (score[0] + points[0], score[1] + points[1])
