@@ -43,7 +43,6 @@ class PlayProcess(Process):
         except Exception as e:
             print(e, type(e))
             self.responseQueue.put((os.getpid(), e))
-            raise e
         finally:
             return
 
