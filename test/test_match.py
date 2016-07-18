@@ -31,8 +31,11 @@ class Bot():
 class TestMatch(TestCase):
     def test_cpu_limit(self):
         response_queue = Queue()
+        # For some reason it doesn't work without this
+        # Really weird
         response_queue.put(1)
         response_queue.get()
+
         play_process = PlayProcess(SlowBot(), Update(), response_queue)
         play_process.start()
         play_process.join()

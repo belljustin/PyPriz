@@ -1,0 +1,6 @@
+[run]
+concurrency = multiprocessing
+source = pypriz
+omit = 
+    /home/*
+    test/*
