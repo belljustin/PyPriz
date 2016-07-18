@@ -1,6 +1,12 @@
 if [[ $* == *-c* ]]; then
     flags="-v --with-coverage --cover-html --cover-erase --cover-package=pypriz"
 fi
+if [[ $* == *-l* ]]; then
+    flags="$flags --nologcapture" 
+fi
+if [[ $* == *-p* ]]; then
+    flags="$flags --pdb" 
+fi
 
 if [[ $1 == "GameEngine" ]]; then
     nosetests test/test_match.py $flags

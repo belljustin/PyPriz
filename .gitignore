@@ -1,7 +1,9 @@
 *.pyc
 *.swp
 *.DS_Store
+*.log
 .env
+env
 .vagrant
 pypriz/settings.py
 cover/

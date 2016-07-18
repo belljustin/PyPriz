@@ -1,10 +1,13 @@
-import resource
 import os
+import logging
+from resource import setrlimit, getrlimit, RLIMIT_CPU, RLIMIT_AS
 from signal import signal, SIGXCPU
 from multiprocessing import Process, Queue
 
 MAX_RUNTIME = 5
 MAX_MEMSIZE = 100*10**6
+
+logging.basicConfig(filename='example.log', level=logging.DEBUG)
 
 
 class Update:
@@ -20,7 +23,7 @@ class Update:
 
 
 def time_expired(n, stack):
-    raise Exception()
+    raise OSError("CPU Limit")
 
 
 class PlayProcess(Process):
@@ -31,19 +34,26 @@ class PlayProcess(Process):
         self.responseQueue = responseQueue
 
     def run(self):
+
+        old_alarm = signal(SIGXCPU, time_expired)
+        cpu_limit = getrlimit(RLIMIT_CPU)
+        as_limit = getrlimit(RLIMIT_AS)
         try:
-            signal(SIGXCPU, time_expired)
-            soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-            resource.setrlimit(resource.RLIMIT_CPU, (MAX_RUNTIME, hard))
+            setrlimit(RLIMIT_CPU, (MAX_RUNTIME, cpu_limit[1]))
+            setrlimit(RLIMIT_AS, (MAX_MEMSIZE, as_limit[1]))
 
-            soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-            resource.setrlimit(resource.RLIMIT_AS, (MAX_MEMSIZE, hard))
-
-            self.responseQueue.put((os.getpid(), self.bot.play(self.update)))
-        except Exception as e:
-            print(e, type(e))
-            self.responseQueue.put((os.getpid(), e))
+            move = self.bot.play(self.update)
+            self.responseQueue.put((os.getpid(), move))
+        except (MemoryError, OSError) as e:
+            if e == MemoryError:
+                raise
+            self.responseQueue.put((os.getpid(), type(e)))
+            logging.error(
+                "{error_type}: {error}".format(error_type=type(e), error=e))
         finally:
+            setrlimit(RLIMIT_CPU, cpu_limit)
+            setrlimit(RLIMIT_AS, as_limit)
+            signal(SIGXCPU, old_alarm)
             return
 
 
@@ -80,7 +90,7 @@ def play_match(bot_a, bot_b, iterations):
                 response_b = response[1]
 
         if type(response_a) != bool or type(response_b) != bool:
-            raise Exception 
+            raise Exception
 
         points = get_points(response_a, response_b)
         score = (score[0] + points[0], score[1] + points[1])
@@ -88,4 +98,3 @@ def play_match(bot_a, bot_b, iterations):
         update_a.update(response_b, response_a, i)
 
     return score
-

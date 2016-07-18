@@ -1,33 +1,54 @@
-from sys import platform
+from multiprocessing import Queue
+
 from unittest import TestCase
 
-from test.bots.hogbot import Bot as HogBot
-from test.bots.slowbot import Bot as SlowBot
-from test.bots.boilerbot import Bot as BoilerBot
-from pypriz.GameEngine.match import play_match
+from pypriz.GameEngine.match import PlayProcess
+from pypriz.GameEngine.match import Update
+from pypriz.GameEngine.match import play_match 
+
+
+class SlowBot():
+    def play(self, update):
+        for i in range(200000):
+            for j in range(200000):
+                i * j
+        return False
+
+
+class HogBot():
+    def play(self, update):
+        return False
+
+
+class Bot():
+    def __init__(self, response=False):
+        self.response = response
+
+    def play(self, update):
+        return self.response
 
 
 class TestMatch(TestCase):
-    @classmethod
-    def setUpClass(self):
-        assert platform == 'linux' or platform == 'linux2'
-
     def test_cpu_limit(self):
-        bot = BoilerBot()
-        slowbot = SlowBot()
+        response_queue = Queue()
+        response_queue.put(1)
+        response_queue.get()
+        play_process = PlayProcess(SlowBot(), Update(), response_queue)
+        play_process.start()
+        play_process.join()
 
-        with self.assertRaises(Exception):
-            play_match(bot, slowbot, 1)
+        pid, error = response_queue.get()
+        self.assertEqual(OSError, error)
 
-    def test_memory_limt(self):
-        bot = BoilerBot()
-        hogbot = HogBot()
+    def test_play_match(self):
+        score = play_match(Bot(), Bot(), 1)
+        self.assertEqual(score, (2, 2))
 
-        with self.assertRaises(Exception):
-            play_match(bot, hogbot, 1)
+        score = play_match(Bot(), Bot(True), 1)
+        self.assertEqual(score, (3, 1))
 
-    def test_succesful_match(self):
-        botA = BoilerBot()
-        botB = BoilerBot()
+        score = play_match(Bot(True), Bot(), 1)
+        self.assertEqual(score, (1, 3))
 
-        play_match(botA, botB, 1)
+        score = play_match(Bot(True), Bot(True), 1)
+        self.assertEqual(score, (3, 3))
