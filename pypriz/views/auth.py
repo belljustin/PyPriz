@@ -1,10 +1,11 @@
 import bcrypt
 
-from flask import render_template, request, redirect, session, url_for, flash
+from flask import render_template, request, redirect, session, url_for
 from flask.views import View
 
 from pypriz.models import db
 from pypriz.models.user import User
+
 
 class LoginView(View):
     def dispatch_request(self):
@@ -44,7 +45,8 @@ class RegisterView(View):
 
     def validate_registration(self, username, email, password):
         password = bytes(password, 'utf-8')
-        if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+        if User.query.filter_by(username=username).first() \
+           or User.query.filter_by(email=email).first():
             return False
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password, salt)
@@ -54,6 +56,7 @@ class RegisterView(View):
         db.session.commit()
         session['user'] = {'id': user.id, 'username': user.username}
         return True
+
 
 class LogoutView(View):
     def dispatch_request(self):

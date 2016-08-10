@@ -1,13 +1,7 @@
-import bcrypt
-import os
-
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, session
-
-from pypriz.models import db
-from pypriz.models.user import User
+from flask import Flask
 
 from pypriz.views import index, auth, upload
+
 
 def create_app(config_filename):
     app = Flask(__name__)
@@ -30,7 +24,9 @@ def create_app(config_filename):
 
     app.add_url_rule(
         '/upload',
-        view_func=upload.UploadView.as_view('upload', app.config['BOT_FOLDER']),
+        view_func=upload.UploadView.as_view(
+            'upload',
+            app.config['BOT_FOLDER']),
         methods=['POST'])
 
     return app

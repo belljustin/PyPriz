@@ -3,12 +3,11 @@
     a.k.a. Blabby Bot
 '''
 
-class Bot:
-    name = "Blabby Bot"
 
+class Bot:
     # store your bot's state here
     def __init__(self):
-        pass
+        self.name = "Blabby Bot"
 
     # define your bot's playing strategy here
     # True = betray, False = keep quiet
@@ -20,5 +19,4 @@ class Bot:
         pass
 
     def __repr__(self):
-        return name
-
+        return self.name
