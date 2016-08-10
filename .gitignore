@@ -8,3 +8,4 @@ env
 pypriz/settings.py
 cover/
 .coverage
+htmlcov/

@@ -8,9 +8,7 @@ if [[ $* == *-p* ]]; then
     flags="$flags --pdb" 
 fi
 
-if [[ $1 == "GameEngine" ]]; then
-    nosetests test/test_match.py $flags
-elif [[ $1 == "flask" ]]; then
+if [[ $1 == "flask" ]]; then
     nosetests test/test_flask.py $flags
 else
     nosetests test $flags
