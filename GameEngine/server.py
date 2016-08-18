@@ -1,5 +1,6 @@
 from multiprocessing.managers import BaseManager
 from multiprocessing import Process, Queue
+from importlib import import_module
 from os import listdir
 from re import search
 
@@ -15,38 +16,52 @@ def get_bots():
 class GameManager(Process):
     def __init__(self, q):
         self.q = q
-        self.bots = get_bots()
         super(GameManager, self).__init__()
 
     def run(self):
         while True:
-            bot = self.q.get()
-            other_bots = self.bots
-            self.bots = self.bots + [bot]
+            scores = []
 
-            bot_a = __import__(BOT_MODULE + bot)
+            bot = self.q.get()
+            other_bots = filter(lambda x: x != bot, get_bots())
+
+            BotA = import_module(".".join([BOT_MODULE, bot]))
             for opponent in other_bots:
-                bot_b = __import__(".".join([BOT_MODULE, opponent]))
-                print(play_game(bot_a, bot_b))
+                BotB = import_module(".".join([BOT_MODULE, opponent]))
+
+                bot_a = BotA.Bot()
+                bot_b = BotB.Bot()
+                scores.append(play_game(bot_a, bot_b))
+            print(scores)
 
 
 class QueueManager(BaseManager):
     pass
 
 
-def start_server():
-    queue = Queue()
-    g = GameManager(queue)
-    g.start()
+class GameServer(Process):
+    def __init__(self):
+        super(GameServer, self).__init__()
 
-    QueueManager.register('get_queue', callable=lambda: queue)
-    m = QueueManager(address=('127.0.0.1', 50000), authkey=b'123')
-    s = m.get_server()
-    s.serve_forever()
+    def start_server(self):
+        queue = Queue()
+        g = GameManager(queue)
+        g.start()
+
+        QueueManager.register('get_queue', callable=lambda: queue)
+        m = QueueManager(address=('', 50000), authkey=b'123')
+        s = m.get_server()
+        s.serve_forever()
+
+    def run(self):
+        self.start_server()
 
 
 if __name__ == '__main__':
     with open('GameEngine/ascii_art.txt', 'r') as f:
         print(f.read())
         print("--- GameEngine ---")
-    start_server()
+    try:
+        GameServer().start_server()
+    except (KeyboardInterrupt, SystemExit):
+        print("Shutting Down...")

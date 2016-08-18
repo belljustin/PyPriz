@@ -1,4 +1,6 @@
 export TESTING=true
+export PYPRIZ_BOT_PATH="test/bots"
+export PYPRIZ_BOT_MODULE="test.bots"
 
 if [[ $* == *-c* ]]; then
     flags="-v --with-coverage --cover-html --cover-erase --cover-package=pypriz --cover-package=GameEngine"
