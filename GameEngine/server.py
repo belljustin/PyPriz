@@ -46,4 +46,7 @@ def start_server():
 
 
 if __name__ == '__main__':
+    with open('GameEngine/ascii_art.txt', 'r') as f:
+        print(f.read())
+        print("--- GameEngine ---")
     start_server()
